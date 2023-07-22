@@ -1,12 +1,12 @@
 const express = require('express');
 const app = express();
 const _port = 3002;
-// const hemlet = require('helmet');
+const hemlet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
 app.use(cors());
-// app.use(hemlet());
+app.use(hemlet());
 app.use(express.json());
 
 const password = 'lluef3bYwG3Nk7kl';
