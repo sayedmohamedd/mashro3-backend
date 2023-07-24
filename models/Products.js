@@ -30,6 +30,14 @@ const ProductSchema = new Schema({
   category: {
     type: String,
   },
+  created_at: {
+    type: Date,
+    default: new Date(),
+  },
+  updated_at: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
 const ProductsModel = model('products', ProductSchema);

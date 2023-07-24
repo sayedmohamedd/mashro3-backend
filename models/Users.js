@@ -1,23 +1,26 @@
-const { model, Schema } = require('mongoose');
+const { model, models, Schema } = require('mongoose');
 
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: true,
-    unique: true,
+    required: [true, 'username is required'],
+    unique: [true, 'username is already exsited'],
+    minLength: [4, 'Name must be longer then 9 characters'],
+    maxLength: [20, 'Name must be lesser then 50 characters'],
   },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    required: [true, 'Email is required'],
+    unique: [true, 'Email is already exsited'],
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Password is required'],
+    minLength: [8, 'Password must be at least 8 characters'],
   },
   phone: {
     type: String,
-    required: true,
+    required: [true, 'Phone is required'],
   },
   image: {
     type: String,
@@ -32,6 +35,6 @@ const UserSchema = new Schema({
   },
 });
 
-const UserModel = model('users', UserSchema);
+const UserModel = models.users || model('users', UserSchema);
 
 module.exports = UserModel;

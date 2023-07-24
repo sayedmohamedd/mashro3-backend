@@ -4,7 +4,7 @@ const _port = 3002;
 const hemlet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
 app.use(cors());
 app.use(hemlet());
 app.use(express.json());
@@ -23,8 +23,12 @@ app.use('/api', categoryRouter);
 const productsRouter = require('./routes/productsRoute');
 app.use('/api', productsRouter);
 
-// Users Login & Regsiter route
+// Users Login & Regsiter Route
 const usersRouter = require('./routes/usersRoute');
 app.use('/api', usersRouter);
+
+// Cart Route
+const cartRouter = require('./routes/cartRoute');
+app.use('/api', cartRouter);
 
 app.listen(_port, () => console.log(`server running on ${_port}`));
