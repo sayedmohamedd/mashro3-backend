@@ -6,6 +6,7 @@ const CartSchema = new Schema({
   product_id: {
     type: SchemaTypes.ObjectId,
   },
+  name: String,
   number: {
     type: Number,
     default: 1,
