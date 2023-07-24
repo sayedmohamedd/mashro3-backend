@@ -31,21 +31,19 @@ exports.addProductToCart = async (req, res) => {
   }
 };
 
+// get cart products
 exports.getCartProducts = async (req, res) => {
   const { user_id } = req.body;
   const cartProducts = await CartModel.find({ user_id });
   return res.json(cartProducts);
-  // let result = [];
-  // try {
-  //   const CartProducts = await CartModel.find({ user_id });
-  //   CartProducts.map(async (product) => {
-  //     const matchedProduct = await ProductModel.findOne({
-  //       _id: product.product_id,
-  //     });
-  //     result.push(matchedProduct);
-  //   });
-  //   return res.json(result);
-  // } catch (error) {
-  //   console.log(error);
-  // }
+};
+
+// remove product
+exports.removeCartProduct = async (req, res) => {
+  const { user_id, product_id } = req.body;
+  const deleteCommand = await CartModel.deleteOne({
+    user_id,
+    product_id,
+  });
+  return res.json(deleteCommand);
 };
