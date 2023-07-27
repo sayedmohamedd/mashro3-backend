@@ -1,7 +1,14 @@
 const ProductModel = require('./../models/Products');
 
+// ALL PRODUCTS
 exports.getProducts = async (req, res) => {
   const products = await ProductModel.find();
+  return res.json(products);
+};
+
+// LATEST PRODUCTS
+exports.getLatestProducts = async (req, res) => {
+  const products = await ProductModel.find().sort({ created_at: 1 });
   return res.json(products);
 };
 

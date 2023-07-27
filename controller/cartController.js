@@ -10,7 +10,10 @@ exports.addProductToCart = async (req, res) => {
       user_id,
     });
     if (existsProduct) {
-      await CartModel.updateOne({ product_id }, { $inc: { number: 1 } });
+      await CartModel.updateOne(
+        { product_id, user_id },
+        { $inc: { number: 1 } }
+      );
       return res.json({
         msg: 'product increased by one',
         success: true,
@@ -46,4 +49,26 @@ exports.removeCartProduct = async (req, res) => {
     product_id,
   });
   return res.json(deleteCommand);
+};
+
+// increase By One
+exports.increaseByOne = async (req, res) => {
+  const { user_id, product_id } = req.body;
+  await CartModel.updateOne({ product_id, user_id }, { $inc: { number: 1 } });
+  return res.json({
+    msg: 'product increased by one',
+    success: true,
+    status: 201,
+  });
+};
+
+//decrease By One
+exports.decreaseByOne = async (req, res) => {
+  const { user_id, product_id } = req.body;
+  await CartModel.updateOne({ product_id, user_id }, { $inc: { number: -1 } });
+  return res.json({
+    msg: 'product decreased by one',
+    success: true,
+    status: 201,
+  });
 };

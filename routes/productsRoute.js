@@ -7,5 +7,6 @@ productsRouter.get(
   '/products/:pageNumber/:category',
   productsController.getProductsByPageNumber
 );
+productsRouter.get('/latestProducts', productsController.getLatestProducts);
 
 module.exports = productsRouter;
