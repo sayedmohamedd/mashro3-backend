@@ -58,7 +58,7 @@ exports.increaseByOne = async (req, res) => {
   return res.json({
     msg: 'product increased by one',
     success: true,
-    status: 201,
+    status: 200,
   });
 };
 
@@ -69,6 +69,17 @@ exports.decreaseByOne = async (req, res) => {
   return res.json({
     msg: 'product decreased by one',
     success: true,
-    status: 201,
+    status: 200,
+  });
+};
+
+// Empty Cart
+exports.getCartEmpty = async (req, res) => {
+  const { user_id } = req.body;
+  await CartModel.deleteMany({ user_id });
+  return res.json({
+    msg: 'cart is clear',
+    success: true,
+    status: 200,
   });
 };

@@ -3,10 +3,11 @@ const productsRouter = express.Router();
 const productsController = require('./../controller/productsController.js');
 
 productsRouter.get('/products', productsController.getProducts);
+productsRouter.get('/latestProducts', productsController.getLatestProducts);
 productsRouter.get(
   '/products/:pageNumber/:category',
   productsController.getProductsByPageNumber
 );
-productsRouter.get('/latestProducts', productsController.getLatestProducts);
+productsRouter.post('/products/search', productsController.productsSearch);
 
 module.exports = productsRouter;

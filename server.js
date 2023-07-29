@@ -4,15 +4,17 @@ const _port = 3002;
 const hemlet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+
 app.use(cors());
 app.use(hemlet());
 app.use(express.json());
 
 const password = 'lluef3bYwG3Nk7kl';
 const username = 'sayedmohamed123sm74';
+// const username = 'siksika';
+// const password = 'M1o8HbWafWxztjXU';
 mongoose.connect(
-  'mongodb+srv://sayedmohamed123sm74:lluef3bYwG3Nk7kl@cluster0.itow9xs.mongodb.net/ecommerce?retryWrites=true&w=majority'
+  `mongodb+srv://${username}:${password}@cluster0.itow9xs.mongodb.net/ecommerce?retryWrites=true&w=majority`
 );
 
 // Category route

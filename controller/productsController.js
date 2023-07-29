@@ -8,7 +8,7 @@ exports.getProducts = async (req, res) => {
 
 // LATEST PRODUCTS
 exports.getLatestProducts = async (req, res) => {
-  const products = await ProductModel.find().sort({ created_at: 1 });
+  const products = await ProductModel.find().sort({ created_at: -1 });
   return res.json(products);
 };
 
@@ -38,5 +38,14 @@ exports.getProductsByPageNumber = async (req, res) => {
         .limit(12);
     }
   }
+  return res.json(products);
+};
+
+// search
+exports.productsSearch = async (req, res) => {
+  const { searchValue } = req.body;
+  const products = await ProductModel.find({
+    name: { $regex: searchValue, $options: 'i' },
+  });
   return res.json(products);
 };
