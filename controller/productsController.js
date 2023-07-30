@@ -12,6 +12,23 @@ exports.getLatestProducts = async (req, res) => {
   return res.json(products);
 };
 
+// get product by slug
+exports.getProductBySlug = async (req, res) => {
+  const { slug } = req.params;
+  const product = await ProductModel.findOne({ slug });
+  res.json(product);
+};
+
+// search
+exports.productsSearch = async (req, res) => {
+  const { searchValue } = req.body;
+  const products = await ProductModel.find({
+    name: { $regex: searchValue, $options: 'i' },
+  });
+  return res.json(products);
+};
+
+// store products by filtering
 exports.getProductsByPageNumber = async (req, res) => {
   let { pageNumber } = req.params;
   let { category } = req.params;
@@ -38,14 +55,5 @@ exports.getProductsByPageNumber = async (req, res) => {
         .limit(12);
     }
   }
-  return res.json(products);
-};
-
-// search
-exports.productsSearch = async (req, res) => {
-  const { searchValue } = req.body;
-  const products = await ProductModel.find({
-    name: { $regex: searchValue, $options: 'i' },
-  });
   return res.json(products);
 };

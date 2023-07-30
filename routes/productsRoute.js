@@ -9,5 +9,6 @@ productsRouter.get(
   productsController.getProductsByPageNumber
 );
 productsRouter.post('/products/search', productsController.productsSearch);
+productsRouter.get('/products/:slug', productsController.getProductBySlug);
 
 module.exports = productsRouter;
