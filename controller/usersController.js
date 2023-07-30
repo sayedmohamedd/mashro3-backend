@@ -8,14 +8,16 @@ exports.getLogin = async (req, res) => {
   const user = await UserModel.findOne({ email });
 
   if (!user) {
-    return res.json({ msg: "user doesn't exist", success: false });
+    return res.json([{ msg: "user doesn't exist", success: false }]);
   }
   const isPasswordValid = bcrypt.compareSync(password, user.password);
   if (!isPasswordValid) {
-    return res.json({
-      msg: 'username or password is incorrect',
-      success: false,
-    });
+    return res.json([
+      {
+        msg: 'username or password is incorrect',
+        success: false,
+      },
+    ]);
   }
   const token = jwt.sign({ id: user._id }, 'ssiikkaa');
   return res.json({
@@ -34,7 +36,7 @@ exports.getRegister = async (req, res) => {
   const { username, email, password, phone } = req.body;
   const user = await UserModel.findOne({ $or: [{ username }, { email }] });
   if (user) {
-    return res.json({ msg: 'already exists', success: false });
+    return res.json([{ msg: 'user already exists', success: false }]);
   }
   const hashedPassword = bcrypt.hashSync(password, 10);
   try {
@@ -52,9 +54,9 @@ exports.getRegister = async (req, res) => {
     if (error instanceof mongoose.Error.ValidationError) {
       let errorList = [];
       for (let e in error.errors) {
-        errorList.push(error.errors[e].message);
+        errorList.push({ msg: error.errors[e].message });
       }
-      res.json({ msg: errorList, password });
+      res.json(errorList);
     } else {
       res.json(error);
     }
