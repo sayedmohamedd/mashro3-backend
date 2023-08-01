@@ -8,5 +8,6 @@ cartRouter.post('/cart/removeProduct', cartController.removeCartProduct);
 cartRouter.post('/cart/increaseProduct', cartController.increaseByOne);
 cartRouter.post('/cart/decreaseProduct', cartController.decreaseByOne);
 cartRouter.post('/cart/emptyCart', cartController.getCartEmpty);
+cartRouter.post('/cart/count', cartController.getCardCount);
 
 module.exports = cartRouter;

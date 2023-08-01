@@ -41,6 +41,13 @@ exports.getCartProducts = async (req, res) => {
   return res.json(cartProducts);
 };
 
+// get cart count
+exports.getCardCount = async (req, res) => {
+  const { user_id } = req.body;
+  const count = await CartModel.countDocuments({ user_id });
+  return res.json(count);
+};
+
 // remove product
 exports.removeCartProduct = async (req, res) => {
   const { user_id, product_id } = req.body;
