@@ -5,7 +5,7 @@ const productsController = require('./../controller/productsController.js');
 productsRouter.get('/products', productsController.getProducts);
 productsRouter.get('/latestProducts', productsController.getLatestProducts);
 productsRouter.get(
-  '/products/:pageNumber/:category',
+  '/products/:pageNumber/:category/:sort',
   productsController.getProductsByPageNumber
 );
 productsRouter.post('/products/search', productsController.productsSearch);

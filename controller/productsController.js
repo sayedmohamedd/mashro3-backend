@@ -32,27 +32,78 @@ exports.productsSearch = async (req, res) => {
 exports.getProductsByPageNumber = async (req, res) => {
   let { pageNumber } = req.params;
   let { category } = req.params;
-  pageNumber = parseInt(pageNumber);
+  let { sort } = req.params;
   let products;
+  pageNumber = parseInt(pageNumber);
   if (pageNumber === 1) {
-    // const categoryCheck = category === 'default' ? 1 : `${category}`;
-    // products = await ProductModel.find({ categoryCheck }).limit(12);
     if (category === 'default') {
-      products = await ProductModel.find().limit(12);
+      if (sort === 'default') {
+        products = await ProductModel.find().limit(12);
+      } else {
+        if (sort === 'lowestPrice') {
+          products = await ProductModel.find().sort({ price: 1 }).limit(12);
+        } else if (sort === 'heightPrice') {
+          products = await ProductModel.find().sort({ price: -1 }).limit(12);
+        }
+      }
     } else if (category !== '') {
-      products = await ProductModel.find({
-        category,
-      }).limit(12);
+      if (sort === 'default') {
+        products = await ProductModel.find({
+          category,
+        }).limit(12);
+      } else {
+        if (sort === 'lowestPrice') {
+          products = await ProductModel.find({
+            category,
+          })
+            .sort({ price: 1 })
+            .limit(12);
+        } else if (sort === 'heightPrice') {
+          products = await ProductModel.find({
+            category,
+          })
+            .sort({ price: -1 })
+            .limit(12);
+        }
+      }
     }
   } else if (pageNumber > 1) {
     if (category === 'default') {
-      products = await ProductModel.find()
-        .skip((pageNumber - 1) * 12)
-        .limit(12);
+      if (sort === 'default') {
+        products = await ProductModel.find()
+          .skip((pageNumber - 1) * 12)
+          .limit(12);
+      } else {
+        if (sort === 'lowestPrice') {
+          products = await ProductModel.find()
+            .sort({ price: 1 })
+            .skip((pageNumber - 1) * 12)
+            .limit(12);
+        } else if (sort === 'heightPrice') {
+          products = await ProductModel.find()
+            .sort({ price: -1 })
+            .skip((pageNumber - 1) * 12)
+            .limit(12);
+        }
+      }
     } else if (category !== '') {
-      products = await ProductModel.find({ category })
-        .skip((pageNumber - 1) * 12)
-        .limit(12);
+      if (sort === 'default') {
+        products = await ProductModel.find({ category })
+          .skip((pageNumber - 1) * 12)
+          .limit(12);
+      } else {
+        if (sort === 'lowestPrice') {
+          products = await ProductModel.find({ category })
+            .sort({ price: -1 })
+            .skip((pageNumber - 1) * 12)
+            .limit(12);
+        } else if (sort === 'heightPrice') {
+          products = await ProductModel.find({ category })
+            .sort({ price: -1 })
+            .skip((pageNumber - 1) * 12)
+            .limit(12);
+        }
+      }
     }
   }
   return res.json(products);
