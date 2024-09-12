@@ -1,30 +1,33 @@
 const { model, Schema } = require('mongoose');
-const ReviewsSchema = new Schema({
+const ReviewSchema = new Schema({
   user_id: {
     type: Schema.ObjectId,
   },
   product_id: {
     type: Schema.ObjectId,
   },
+  text: {
+    type: String,
+  },
   rating: {
+    type: Number,
+  },
+  likes: {
     type: Number,
   },
   comments: {
     type: String,
   },
-  description: {
-    type: String,
-  },
   created_at: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
   updated_at: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
 });
 
-const ReviewsModel = model('Reviews', ReviewsSchema);
+const Review = model('Review', ReviewSchema);
 
-module.exports = ReviewsModel;
+module.exports = Review;

@@ -1,13 +1,27 @@
 const express = require('express');
-const cartRouter = express.Router();
-const cartController = require('./../controller/cartController.js');
+const router = express.Router();
 
-cartRouter.post('/cart', cartController.getCartProducts);
-cartRouter.post('/cart/addproduct', cartController.addProductToCart);
-cartRouter.post('/cart/removeProduct', cartController.removeCartProduct);
-cartRouter.post('/cart/increaseProduct', cartController.increaseByOne);
-cartRouter.post('/cart/decreaseProduct', cartController.decreaseByOne);
-cartRouter.post('/cart/emptyCart', cartController.getCartEmpty);
-cartRouter.post('/cart/count', cartController.getCardCount);
+// Controllers
+const {
+  getAllCartProducts,
+  addProductToCart,
+  removeProductFromCart,
+  decreaseProductNumberByOne,
+  resetCart,
+} = require('./../controllers/cart.controller.js');
+const { protect } = require('../controllers/auth.controller.js');
 
-module.exports = cartRouter;
+// Protect All Routes
+router.use(protect);
+
+router
+  .route('/')
+  .get(getAllCartProducts)
+  .post(addProductToCart)
+  .patch(decreaseProductNumberByOne)
+  .delete(resetCart);
+
+// removeProductFromCart
+router.route('/:id').delete(removeProductFromCart);
+
+module.exports = router;

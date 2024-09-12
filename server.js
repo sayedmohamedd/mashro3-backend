@@ -4,33 +4,36 @@ const _port = 3002;
 const hemlet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const { config } = require('dotenv');
 
+config();
 app.use(cors());
 app.use(hemlet());
 app.use(express.json());
 
-const password = 'lluef3bYwG3Nk7kl';
-const username = 'sayedmohamed123sm74';
-// const username = 'siksika';
-// const password = 'M1o8HbWafWxztjXU';
-mongoose.connect(
-  `mongodb+srv://${username}:${password}@cluster0.itow9xs.mongodb.net/ecommerce?retryWrites=true&w=majority`
-);
+mongoose
+  .connect(process.env.DB_URL)
+  .then(() => console.log('Database Connected Successfully'))
+  .catch((err) => console.log(err));
 
-// Category route
+// Routes
+const productRouter = require('./routes/productRoute');
+app.use('/api/v1/products', productRouter);
+
 const categoryRouter = require('./routes/categoryRoute');
-app.use('/api', categoryRouter);
+app.use('/api/v1/categories', categoryRouter);
 
-// pحroducts route
-const productsRouter = require('./routes/productsRoute');
-app.use('/api', productsRouter);
+const userRouter = require('./routes/userRoute');
+app.use('/api/v1/users', userRouter);
 
-// Users Login & Regsiter Route
-const usersRouter = require('./routes/usersRoute');
-app.use('/api', usersRouter);
-
-// Cart Route
 const cartRouter = require('./routes/cartRoute');
-app.use('/api', cartRouter);
+app.use('/api/v1/cart', cartRouter);
 
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
+// app.use(globalHandlingError)
+
+// Running Server on
 app.listen(_port, () => console.log(`server running on ${_port}`));

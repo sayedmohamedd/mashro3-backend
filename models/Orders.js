@@ -1,12 +1,12 @@
-const { model, Schema, id } = require('mongoose');
+const { model, Schema, SchemaTypes } = require('mongoose');
 const OrderSchema = new Schema({
   user_id: {
-    type: Schema.ObjectId,
+    type: SchemaTypes.ObjectId,
   },
   products: [
     {
       product_id: {
-        type: Schema.ObjectId,
+        type: SchemaTypes.ObjectId,
       },
       quantity: {
         type: {
@@ -34,6 +34,6 @@ const OrderSchema = new Schema({
   },
 });
 
-const OrdersModel = model('orders', OrderSchema);
+const Order = model('Order', OrderSchema);
 
-module.exports = OrdersModel;
+module.exports = Order;

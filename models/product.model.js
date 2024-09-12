@@ -1,4 +1,5 @@
 const { model, Schema } = require('mongoose');
+
 const ProductSchema = new Schema({
   name: {
     type: String,
@@ -24,6 +25,9 @@ const ProductSchema = new Schema({
   image: {
     type: String,
   },
+  images: {
+    type: [String],
+  },
   numberInStock: {
     type: Number,
   },
@@ -32,14 +36,14 @@ const ProductSchema = new Schema({
   },
   created_at: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
   updated_at: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
 });
 
-const ProductsModel = model('products', ProductSchema);
+const Product = model('Product', ProductSchema);
 
-module.exports = ProductsModel;
+module.exports = Product;
