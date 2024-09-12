@@ -22,13 +22,17 @@ exports.getAllCartProducts = async (req, res) => {
 // Add Product To Cart or Increase Already Exist Product By One
 exports.addProductToCart = async (req, res) => {
   try {
-    const { product_id, id } = req.body;
+    const { product_id } = req.body;
+
     // if already exists
-    const existedProduct = await Cart.findById(id);
+    const existedProduct = await Cart.findOne({
+      user: req.user._id,
+      product: product_id,
+    });
 
     if (existedProduct) {
       const updatedProduct = await Cart.updateOne(
-        { _id: id },
+        { user: req.user._id, product: product_id },
         { $inc: { number: 1 } }
       );
       return res.status(200).json({
