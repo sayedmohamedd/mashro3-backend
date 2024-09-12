@@ -29,9 +29,9 @@ app.use('/api/v1/users', userRouter);
 const cartRouter = require('./routes/cartRoute');
 app.use('/api/v1/cart', cartRouter);
 
-app.all('*', (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
-});
+// app.all('*', (req, res, next) => {
+//   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+// });
 
 // app.use(globalHandlingError)
 
