@@ -29,6 +29,9 @@ app.use('/api/v1/users', userRouter);
 const cartRouter = require('./routes/cartRoute');
 app.use('/api/v1/cart', cartRouter);
 
+const paymentRouter = require('./routes/payment.route');
+app.use('/api/v1/payment', paymentRouter);
+
 // app.all('*', (req, res, next) => {
 //   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 // });
