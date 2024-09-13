@@ -49,45 +49,55 @@ exports.login = async (req, res) => {
 
 exports.register = async (req, res) => {
   const { username, email, password, phone } = req.body;
-
-  const user = await User.findOne({ $or: [{ username }, { email }] });
-
-  //   Check if User already Exist
-  if (user) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'user already exists',
-    });
-  }
-
-  //   Hashed Password
-  const hashedPassword = bcrypt.hashSync(password, 10);
-
-  //   Create New User
   try {
+    const user = await User.findOne({ $or: [{ username }, { email }] });
+
+    //   Check if User already Exist
+    if (user) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'user is already existed',
+      });
+    }
+
+    //   Hashed Password
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
+    //   Create New User
     const newUser = await User.create({
       username,
       email,
       password: hashedPassword,
       phone,
     });
+
+    // Remove password from res
     newUser.password = undefined;
+
+    //Create Token
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+
     return res.status(201).json({
       status: 'success',
+      token,
       data: {
         user: newUser,
       },
     });
-  } catch (error) {
-    if (error instanceof mongoose.Error.ValidationError) {
-      let errorList = [];
-      for (let e in error.errors) {
-        errorList.push({ msg: error.errors[e].message });
-      }
-      res.json(errorList);
-    } else {
-      res.json(error);
-    }
+  } catch (err) {
+    return res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+    // if (error instanceof mongoose.Error.ValidationError) {
+    //   let errorList = [];
+    //   for (let e in error.errors) {
+    //     errorList.push({ msg: error.errors[e].message });
+    //   }
+    //   res.json(errorList);
+    // } else {
+    //   res.json(error);
+    // }
   }
 };
 
@@ -100,6 +110,7 @@ exports.protect = async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(' ')[1];
   }
+
   if (!token) {
     return res.status(401).json({
       status: 'fail',
