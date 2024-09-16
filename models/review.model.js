@@ -1,28 +1,31 @@
 const { model, Schema } = require('mongoose');
 const ReviewSchema = new Schema({
-  user_id: {
-    type: Schema.ObjectId,
+  product: {
+    type: Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true,
   },
-  product_id: {
-    type: Schema.ObjectId,
-  },
-  text: {
-    type: String,
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
   rating: {
     type: Number,
+    required: true,
+  },
+  comment: {
+    type: String,
+    required: true,
   },
   likes: {
     type: Number,
   },
-  comments: {
-    type: String,
-  },
-  created_at: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
-  updated_at: {
+  updatedAt: {
     type: Date,
     default: Date.now,
   },

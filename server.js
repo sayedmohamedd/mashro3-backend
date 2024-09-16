@@ -5,19 +5,22 @@ const hemlet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { config } = require('dotenv');
+const globalHandlingError = require('./controllers/error.controller');
+const AppError = require('./utils/appError');
 
 config();
 app.use(cors());
 app.use(hemlet());
 app.use(express.json());
 
+// Connect To DB
 mongoose
   .connect(process.env.DB_URL)
   .then(() => console.log('Database Connected Successfully'))
   .catch((err) => console.log(err));
 
 // Routes
-const productRouter = require('./routes/productRoute');
+const productRouter = require('./routes/product.route');
 app.use('/api/v1/products', productRouter);
 
 const categoryRouter = require('./routes/categoryRoute');
@@ -32,11 +35,13 @@ app.use('/api/v1/cart', cartRouter);
 const paymentRouter = require('./routes/payment.route');
 app.use('/api/v1/payment', paymentRouter);
 
-// app.all('*', (req, res, next) => {
-//   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
-// });
+// Catch All undefined routes
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
 
-// app.use(globalHandlingError)
+// Global Handling Middleware
+app.use(globalHandlingError);
 
 // Running Server on
 app.listen(_port, () => console.log(`server running on ${_port}`));

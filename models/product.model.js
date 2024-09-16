@@ -1,4 +1,5 @@
 const { model, Schema } = require('mongoose');
+const slugify = require('slugify');
 
 const ProductSchema = new Schema({
   name: {
@@ -10,14 +11,11 @@ const ProductSchema = new Schema({
   price: {
     type: Number,
   },
-  available: {
-    type: Boolean,
+  stock: {
+    type: Number,
   },
   description: {
     type: String,
-  },
-  rate: {
-    type: Number,
   },
   offer: {
     type: String,
@@ -28,12 +26,13 @@ const ProductSchema = new Schema({
   images: {
     type: [String],
   },
-  numberInStock: {
-    type: Number,
-  },
   category: {
     type: String,
   },
+  averageRating: {
+    type: Number,
+    default: 0,
+  }, // Stores the average rating for quick access
   created_at: {
     type: Date,
     default: Date.now,
@@ -42,6 +41,11 @@ const ProductSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+});
+
+ProductSchema.pre('save', function (next) {
+  this.slug = slugify(this.name.toLowerCase());
+  next();
 });
 
 const Product = model('Product', ProductSchema);

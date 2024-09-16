@@ -17,12 +17,31 @@ const UserSchema = new Schema({
     required: [true, 'You should provide a password'],
     minlength: [8, 'Password must be at least 8 characters'],
   },
+  passwordConfirm: {
+    type: String,
+    required: [true, 'You should provide a password confirm'],
+    validate: function (el) {
+      return (this.password = el);
+    },
+  },
   phone: {
     type: String,
     required: [true, 'You should provide a phone number'],
   },
   image: {
     type: String,
+  },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    zipCode: String,
+    country: String,
+  },
+  role: {
+    type: String,
+    default: 'user',
+    enum: ['user', 'admin'],
   },
   created_at: {
     type: Date,

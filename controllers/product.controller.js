@@ -1,4 +1,6 @@
+// Models
 const Product = require('./../models/product.model');
+// Utils
 const APIFeatures = require('./../utils/APIFeatures');
 
 // Get All Products
@@ -78,7 +80,78 @@ exports.getLatestProducts = async (req, res) => {
   return res.json(products);
 };
 
-// store products by filtering
+// Add Product by Admin
+exports.addProduct = async (req, res) => {
+  // Check If Imaged Uploaded Successfully
+  if (!req.file) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'failed to upload the image',
+    });
+  }
+
+  try {
+    const { name, price, stock, description, category } = req.body;
+    // Create Product
+    const product = await Product.create({
+      name,
+      price,
+      stock,
+      description,
+      category,
+      image: req.file.path,
+    });
+    res.status(201).json({
+      status: 'success',
+      data: {
+        product,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+// Update Porduct
+exports.updateProduct = async () => {
+  const { productId } = req.params;
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(productId, req.body);
+    res.status(200).json({
+      status: 'success',
+      data: {
+        product: updatedProduct,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+// Delete Product
+exports.deleteProduct = async () => {
+  const { productId } = req.params;
+  try {
+    await Product.findByIdAndDelete(productId);
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+// store products by filteringconst
 // exports.getProductsByPageNumber = async (req, res) => {
 //   let { pageNumber } = req.params;
 //   let { category } = req.params;

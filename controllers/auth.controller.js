@@ -1,36 +1,28 @@
 const User = require('./../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 const { promisify } = require('util');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
 
-exports.login = async (req, res) => {
+exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(401).json({
-      status: 'fail',
-      message: 'Please Provide Email & Password',
-    });
+    return next(new AppError('Please Provide Email & Password', 400));
   }
 
   const user = await User.findOne({ email });
 
   //   Check if User Exist
   if (!user) {
-    return res.status(401).json({
-      status: 'fail',
-      message: "user doesn't exist",
-    });
+    return next(new AppError("user doesn't exist", 404));
   }
 
   //   Check password is correct
-  const isPasswordValid = bcrypt.compareSync(password, user.password);
+  const isPasswordValid = await bcrypt.compareSync(password, user.password);
   if (!isPasswordValid) {
-    return res.status(401).json({
-      status: 'fail',
-      message: 'username or password is incorrect',
-    });
+    return next(new AppError('username or password is incorrect', 401));
   }
 
   //Create Token
@@ -45,7 +37,7 @@ exports.login = async (req, res) => {
       user,
     },
   });
-};
+});
 
 exports.register = async (req, res) => {
   const { username, email, password, phone } = req.body;
@@ -133,6 +125,16 @@ exports.protect = async (req, res, next) => {
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
   next();
+};
+
+exports.restrictTo = (role) => (req, res, next) => {
+  if (req.user.role === role) {
+    return next();
+  }
+  return res.status(403).json({
+    status: 'fail',
+    message: "you don't have this access",
+  });
 };
 
 // exports.protect = catchAsync(async (req, res, next) => {
