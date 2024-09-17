@@ -43,11 +43,15 @@ const UserSchema = new Schema({
     default: 'user',
     enum: ['user', 'admin'],
   },
-  created_at: {
+  active: {
+    type: Boolean,
+    default: true,
+  },
+  createdAt: {
     type: Date,
     default: Date.now,
   },
-  updated_at: {
+  updatedAt: {
     type: Date,
     default: Date.now,
   },

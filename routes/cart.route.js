@@ -8,7 +8,7 @@ const {
   removeProductFromCart,
   decreaseProductNumberByOne,
   resetCart,
-} = require('./../controllers/cart.controller.js');
+} = require('../controllers/cart.controller.js');
 const { protect } = require('../controllers/auth.controller.js');
 
 // Protect All Routes

@@ -4,7 +4,6 @@ const router = express.Router();
 // Controllers
 const {
   getAllProducts,
-  getLatestProducts,
   getProductsByNameOrSlug,
   addProduct,
   updateProduct,
@@ -40,8 +39,7 @@ router
   .patch(protect, restrictTo('admin'), updateProduct)
   .delete(protect, restrictTo('admin'), deleteProduct);
 
-// Get Product
-router.get('/latestProducts', getLatestProducts);
+// Get Product by Name or Slug
 router.get('/:searchValue', getProductsByNameOrSlug);
 
 module.exports = router;

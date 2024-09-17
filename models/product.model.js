@@ -33,11 +33,11 @@ const ProductSchema = new Schema({
     type: Number,
     default: 0,
   }, // Stores the average rating for quick access
-  created_at: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
-  updated_at: {
+  updatedAt: {
     type: Date,
     default: Date.now,
   },

@@ -23,13 +23,13 @@ mongoose
 const productRouter = require('./routes/product.route');
 app.use('/api/v1/products', productRouter);
 
-const categoryRouter = require('./routes/categoryRoute');
+const categoryRouter = require('./routes/category.route');
 app.use('/api/v1/categories', categoryRouter);
 
-const userRouter = require('./routes/userRoute');
+const userRouter = require('./routes/user.route');
 app.use('/api/v1/users', userRouter);
 
-const cartRouter = require('./routes/cartRoute');
+const cartRouter = require('./routes/cart.route');
 app.use('/api/v1/cart', cartRouter);
 
 const paymentRouter = require('./routes/payment.route');

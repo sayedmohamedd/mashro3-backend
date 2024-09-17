@@ -12,11 +12,11 @@ const CartSchema = new Schema(
       type: Number,
       default: 1,
     },
-    created_at: {
+    createdAt: {
       type: Date,
       default: Date.now,
     },
-    updated_at: {
+    updatedAt: {
       type: Date,
       default: Date.now,
     },

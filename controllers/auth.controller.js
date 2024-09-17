@@ -1,6 +1,9 @@
+// Models
 const User = require('./../models/user.model');
+// Packages
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+// Utils
 const { promisify } = require('util');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
@@ -39,59 +42,40 @@ exports.login = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.register = async (req, res) => {
+exports.register = catchAsync(async (req, res, next) => {
   const { username, email, password, phone } = req.body;
-  try {
-    const user = await User.findOne({ $or: [{ username }, { email }] });
+  const user = await User.findOne({ $or: [{ username }, { email }] });
 
-    //   Check if User already Exist
-    if (user) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'user is already existed',
-      });
-    }
-
-    //   Hashed Password
-    const hashedPassword = bcrypt.hashSync(password, 10);
-
-    //   Create New User
-    const newUser = await User.create({
-      username,
-      email,
-      password: hashedPassword,
-      phone,
-    });
-
-    // Remove password from res
-    newUser.password = undefined;
-
-    //Create Token
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
-
-    return res.status(201).json({
-      status: 'success',
-      token,
-      data: {
-        user: newUser,
-      },
-    });
-  } catch (err) {
-    return res.status(400).json({
-      status: 'fail',
-      message: err.message,
-    });
-    // if (error instanceof mongoose.Error.ValidationError) {
-    //   let errorList = [];
-    //   for (let e in error.errors) {
-    //     errorList.push({ msg: error.errors[e].message });
-    //   }
-    //   res.json(errorList);
-    // } else {
-    //   res.json(error);
-    // }
+  //   Check if User already Exist
+  if (user) {
+    return next(new AppError('user is already existed', 400));
   }
-};
+
+  //   Hashed Password
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
+  //   Create New User
+  const newUser = await User.create({
+    username,
+    email,
+    password: hashedPassword,
+    phone,
+  });
+
+  // Remove password from res
+  newUser.password = undefined;
+
+  //Create Token
+  const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+
+  return res.status(201).json({
+    status: 'success',
+    token,
+    data: {
+      user: newUser,
+    },
+  });
+});
 
 exports.protect = async (req, res, next) => {
   // 1) Getting token and check if it's there
@@ -104,10 +88,9 @@ exports.protect = async (req, res, next) => {
   }
 
   if (!token) {
-    return res.status(401).json({
-      status: 'fail',
-      message: 'You are not logged in! Please log in to get access',
-    });
+    return next(
+      new AppError('You are not logged in! Please log in to get access', 401)
+    );
   }
 
   // 2) Verify token => if someone manipulate the data or token is expired
@@ -116,10 +99,9 @@ exports.protect = async (req, res, next) => {
   // 3) Check if user still exist
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
-    return res.status(401).json({
-      status: 'fail',
-      message: 'The user belonging to this token does no longer exist',
-    });
+    return next(
+      new AppError('The user belonging to this token does no longer exist', 401)
+    );
   }
 
   // GRANT ACCESS TO PROTECTED ROUTE
@@ -131,10 +113,7 @@ exports.restrictTo = (role) => (req, res, next) => {
   if (req.user.role === role) {
     return next();
   }
-  return res.status(403).json({
-    status: 'fail',
-    message: "you don't have this access",
-  });
+  return next(new AppError("you don't have this access", 403));
 };
 
 // exports.protect = catchAsync(async (req, res, next) => {
