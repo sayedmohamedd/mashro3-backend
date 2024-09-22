@@ -1,4 +1,6 @@
+// Models
 const Cart = require('../models/cart.model');
+// Utils
 const catchAsync = require('./../utils/catchAsync');
 
 // get cart products
@@ -42,10 +44,41 @@ exports.addProductToCart = catchAsync(async (req, res, next) => {
     user: req.user._id,
     number: 1,
   });
+
   return res.status(201).json({
     success: 'success',
     data: {
       product: newProduct,
+    },
+  });
+});
+
+// Decrease Product Already In Cart By One
+exports.decreaseProductNumberByOne = catchAsync(async (req, res, next) => {
+  const { id } = req.body;
+  const updatedProduct = await Cart.updateOne(
+    { _id: id },
+    { $inc: { number: -1 } }
+  );
+  res.status(200).json({
+    success: 'success',
+    data: {
+      product: updatedProduct,
+    },
+  });
+});
+
+// Increase Product Already In Cart By One
+exports.increaseProductNumberByOne = catchAsync(async (req, res, next) => {
+  const { id } = req.body;
+  const updatedProduct = await Cart.updateOne(
+    { _id: id },
+    { $inc: { number: 1 } }
+  );
+  res.status(200).json({
+    success: 'success',
+    data: {
+      product: updatedProduct,
     },
   });
 });
@@ -62,21 +95,6 @@ exports.removeProductFromCart = catchAsync(async (req, res, next) => {
   });
 });
 
-// Decrease Product Already In Cart By One
-exports.decreaseProductNumberByOne = catchAsync(async (req, res, next) => {
-  const { id } = req.body;
-  const updatedProduct = await Cart.updateOne(
-    { _id: id },
-    { $inc: { number: -1 } }
-  );
-  res.status(204).json({
-    success: 'success',
-    data: {
-      product: updatedProduct,
-    },
-  });
-});
-
 // Reset Cart Empty
 exports.resetCart = catchAsync(async (req, res, next) => {
   await Cart.deleteMany({ user: req.user._id });
@@ -85,3 +103,40 @@ exports.resetCart = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+// // Add Product To Cart or Increase Already Exist Product By One
+// exports.addProductToCart = catchAsync(async (req, res, next) => {
+//   const { product_id } = req.body;
+
+//   // if already exists
+//   const existedProduct = await Cart.findOne({
+//     user: req.user._id,
+//     product: product_id,
+//   });
+
+//   if (existedProduct) {
+//     const updatedProduct = await Cart.updateOne(
+//       { user: req.user._id, product: product_id },
+//       { $inc: { number: 1 } }
+//     );
+//     return res.status(200).json({
+//       success: 'success',
+//       data: {
+//         product: updatedProduct,
+//       },
+//     });
+//   }
+
+//   // if new product
+//   const newProduct = await Cart.create({
+//     product: product_id,
+//     user: req.user._id,
+//     number: 1,
+//   });
+//   return res.status(201).json({
+//     success: 'success',
+//     data: {
+//       product: newProduct,
+//     },
+//   });
+// });
