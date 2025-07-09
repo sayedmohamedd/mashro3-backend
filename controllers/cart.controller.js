@@ -6,10 +6,15 @@ const catchAsync = require('./../utils/catchAsync');
 // get cart products
 exports.getAllCartProducts = catchAsync(async (req, res, next) => {
   const cartProducts = await Cart.find({ user: req.user._id });
+  let numberOfProducts = 0;
+  cartProducts.forEach((el) => {
+    numberOfProducts += el.number;
+  });
   res.status(200).json({
     status: 'success',
     results: cartProducts.length,
     data: {
+      numberOfProducts,
       cart: cartProducts,
     },
   });
@@ -103,40 +108,3 @@ exports.resetCart = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
-
-// // Add Product To Cart or Increase Already Exist Product By One
-// exports.addProductToCart = catchAsync(async (req, res, next) => {
-//   const { product_id } = req.body;
-
-//   // if already exists
-//   const existedProduct = await Cart.findOne({
-//     user: req.user._id,
-//     product: product_id,
-//   });
-
-//   if (existedProduct) {
-//     const updatedProduct = await Cart.updateOne(
-//       { user: req.user._id, product: product_id },
-//       { $inc: { number: 1 } }
-//     );
-//     return res.status(200).json({
-//       success: 'success',
-//       data: {
-//         product: updatedProduct,
-//       },
-//     });
-//   }
-
-//   // if new product
-//   const newProduct = await Cart.create({
-//     product: product_id,
-//     user: req.user._id,
-//     number: 1,
-//   });
-//   return res.status(201).json({
-//     success: 'success',
-//     data: {
-//       product: newProduct,
-//     },
-//   });
-// });

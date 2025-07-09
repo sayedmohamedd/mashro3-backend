@@ -11,21 +11,21 @@ const {
 } = require('../controllers/product.controller');
 const { protect, restrictTo } = require('../controllers/auth.controller');
 
-// Uoload Product Image
+// Upload Product Image
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../utils/cloudinaryConfig');
 
 // Creare Cloudinary Storage
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+  cloudinary,
   params: {
     folder: 'products', // Specify the folder in your Cloudinary account
     allowed_formats: ['jpg', 'png', 'jpeg'], // Allowed formats
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 // Routes
 
