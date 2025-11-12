@@ -15,7 +15,7 @@ app.use(express.json());
 
 // Connect To DB
 mongoose
-  .connect(process.env.DB_URL)
+  .connect(process.env.LOCAL_DB_URL)
   .then(() => console.log('Database Connected Successfully'))
   .catch((err) => console.log(err));
 
